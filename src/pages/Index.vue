@@ -6,7 +6,6 @@
     </div>
     <div v-for="({node: { id, count, resources }}) in $page.tags.edges" :key="id">
       <div class="tag">
-        <input :placeholder="count" type="number" />
         {{id}}
       </div>
       <div v-for="{id, category, title} in resources" :key="id">
@@ -74,7 +73,11 @@ h4 {
 }
 
 .tag {
-  border-bottom: 1px solid;
-  padding-bottom: 5px;
+    font-size: 24px;
+    line-height: 32px;
+    padding-bottom: 2px;
+    border-bottom: 1px #000 solid;
+    margin-bottom: 4px;
+    padding-left: 8px;
 }
 </style>
