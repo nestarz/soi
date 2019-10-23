@@ -80,7 +80,7 @@ import { ref, reactive, computed } from "@vue/composition-api";
 
 export default {
   metaInfo: {
-    title: "About us"
+    title: "resources"
   },
   setup(props, { parent }) {
     const node = edge => edge.node;

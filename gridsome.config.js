@@ -1,4 +1,4 @@
 module.exports = {
-  siteName: "Gridsome",
+  siteName: "eliaspourquoi",
   plugins: []
 };
