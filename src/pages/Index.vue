@@ -1,25 +1,26 @@
 <template>
   <div class="resources">
     <div class="categories">
-      <div class="output">
-        <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
-      </div>
-      <input
-        type="range"
-        min="0"
-        v-model="active"
-        :max="categories.length - 1"
-        step="1"
-        list="ticks"
-      />
-      <datalist id="ticks">
+      <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
+      <input type="range" v-model="active" min="0" :max="categories.length - 1" step=".1" list="t" />
+      <datalist id="t">
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
+    </div>
+    <earth></earth>
+    <div class="select">
+      <select>
+        <option>Infrastructure</option>
+      </select>
+      <select multiple>
+        <option v-for="({ id }, index) in tags" :key="id">{{ id }}</option>
+      </select>
     </div>
     <div class="main">
       <div class="tags">
         <template v-for="{ id, title, category, screenshot } in resources">
-          <img :src="screenshot" v-show="!activename || category === activename" :key="id" />
+          <img :src="screenshot.w400" v-show="!activename || category === activename" :key="id" />
+          <a :href="screenshot.w400" :key="category+id+Math.random()">{{ title }}</a>
         </template>
       </div>
       <div class="tags tag">
@@ -27,7 +28,7 @@
           <div class="title" :key="tag">{{ tag }}</div>
           <template v-for="{category, resources} in byCategoryResources">
             <template v-for="{ id, title, category, screenshot } in resources">
-              <a :href="screenshot" :key="category+tag+id+Math.random()">{{ title }}</a>
+              <a :href="screenshot.w400" :key="category+tag+id+Math.random()">{{ title }}</a>
             </template>
           </template>
         </template>
@@ -41,7 +42,10 @@ query {
   resources: allResources {
     edges {
       node {
-        screenshot
+        screenshot {
+          w400
+          w800
+        }
         category
       }
     }
@@ -55,7 +59,10 @@ query {
             id
             title
             description
-            screenshot
+            screenshot {
+              w400
+              w800
+            }
             category
           }
       }
@@ -72,7 +79,10 @@ query {
             id
             title
             description
-            screenshot
+            screenshot {
+              w400
+              w800
+            }
             category
           }
         }
@@ -84,10 +94,14 @@ query {
 
 <script>
 import { ref, reactive, computed } from "@vue/composition-api";
+import earth from "../components/earth.vue";
 
 export default {
   metaInfo: {
     title: "resources"
+  },
+  components: {
+    earth
   },
   setup(props, { parent }) {
     const node = edge => edge.node;
@@ -96,7 +110,7 @@ export default {
     const tags = computed(() => parent.$page.tags.edges.map(node));
     const active = ref(6);
     const activename = computed(
-      () => active.value && categories.value[active.value].id
+      () => active.value && categories.value[Math.floor(active.value)].id
     );
     const filtered = computed(() =>
       tags.value
@@ -123,6 +137,26 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 25px;
+  grid-area: main;
+}
+
+.select {
+  grid-area: nav;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: 7px 7px;
+  width: 152px;
+}
+
+svg {
+  grid-area: map;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0vh;
+  pointer-events: none;
+  right: 0;
+  left: 0;
 }
 
 img {
@@ -140,7 +174,21 @@ img {
 }
 
 .resources {
-  margin: 1em;
+  margin: 5px;
+  display: grid;
+  grid-template-areas:
+    "head head"
+    "nav  main"
+    "nav  main";
+  grid-template-columns: 153px 1fr;
+  grid-gap: 5px;
+}
+
+.categories {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  grid-area: head;
 }
 
 .categories .output {
@@ -150,7 +198,6 @@ img {
 
 .categories output {
   display: block;
-  transform: skewX(10deg);
 }
 @media screen and (max-width: 992px) {
   .categories output {
@@ -162,6 +209,7 @@ img {
 .categories input {
   width: 100%;
   box-sizing: content-box;
+  margin-bottom: -5px;
 }
 
 a {

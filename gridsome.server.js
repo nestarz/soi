@@ -76,7 +76,6 @@ module.exports = function(api) {
     );
 
     // Populate Tags
-    console.log(tags.byCategory);
     Object.entries(tags.items).forEach(([tag, resources]) =>
       tags.collection.addNode({
         id: tag,

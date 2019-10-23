@@ -17,16 +17,28 @@ const slugify = text =>
     .replace(/-+$/, "");
 
 const resources_files = "content/resources/**/*.yml";
-const scpath = "screenshots";
 
 module.exports = get = async () => {
-  const resources = await fetchYaml(resources_files);
-  resources.forEach(r => (r.slug = r.slug || slugify(r.title)));
-  resources.forEach(r => (r.screenshot = path.join(scpath, `${r.slug}.png`)));
+  let resources = (await fetchYaml(resources_files)).map(resource => ({
+    ...resource,
+    slug: resource.slug || slugify(resource.title)
+  }));
+  const urls_path = resources.map(({ url, slug }) => ({
+    url,
+    w800: path.join("static/", "screenshots", `${slug}.800.png`),
+    w400: path.join("static/", "screenshots", `${slug}.400.png`)
+  }));
+  const success = await screenshot(urls_path, 4);
+  resources = resources.map(resource => {
+    const screenshot = success.find(({ url }) => resource.url === url);
+    return {
+      ...resource,
+      screenshot: {
+        w400: screenshot ? screenshot.w400.replace("static/", "") : null,
+        w800: screenshot ? screenshot.w800.replace("static/", "") : null
+      }
+    };
+  });
 
-  const urls = resources.map(({ url }) => url);
-  const dests = resources.map(r => path.join("static/", r.screenshot));
-
-  await screenshot(urls, dests, 4);
   return resources;
 };
