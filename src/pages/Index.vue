@@ -4,7 +4,14 @@
       <div class="output">
         <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
       </div>
-      <input type="range" min="0" v-model="active" :max="categories.length - 1" step="1" list="ticks" />
+      <input
+        type="range"
+        min="0"
+        v-model="active"
+        :max="categories.length - 1"
+        step="1"
+        list="ticks"
+      />
       <datalist id="ticks">
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
@@ -15,8 +22,8 @@
           <img :src="screenshot" v-show="!activename || category === activename" :key="id" />
         </template>
       </div>
-      <div class="tags">
-        <template class="tag" v-for="({ id: tag, count, byCategoryResources }) in filtered">
+      <div class="tags tag">
+        <template v-for="({ id: tag, count, byCategoryResources }) in filtered">
           <div class="title" :key="tag">{{ tag }}</div>
           <template v-for="{category, resources} in byCategoryResources">
             <template v-for="{ id, title, category, screenshot } in resources">
@@ -115,28 +122,21 @@ export default {
 .main {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 5px;
+  grid-gap: 25px;
 }
 
 img {
   width: 100%;
 }
 
-h4 {
-  margin: 0;
-  margin-bottom: 5px;
-}
-
-.tag {
-  margin-bottom: 7px;
-}
-
-.tag > .title {
+.title {
   font-size: 24px;
-  line-height: 32px;
-  padding-bottom: 4px;
-  margin-bottom: 3px;
-  color: grey;
+  line-height: 24px;
+  padding-bottom: 11px;
+}
+
+.title:not(:first-of-type) {
+  margin-top: 24px;
 }
 
 .resources {
