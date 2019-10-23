@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    { "id": 1, "name": "Ceramique", "mass": 100, "value": 100 },
+    { "id": 2, "name": "Impression Numérique", "group": "digital" },
+    { "id": 3, "name": "Formes", "group": "digital" },
+    { "id": 4, "name": "Intéractions", "group": "digital" },
+    { "id": 5, "name": "Instruments", "group": "digital" },
+    { "id": 6, "name": "Thérémine", "group": "digital" },
+    { "id": 7, "name": "Synthétiseur", "group": "digital" },
+    { "id": 8, "name": "Open Data", "group": "digital" },
+    { "id": 9, "name": "Open Source", "group": "digital" },
+    { "id": 10, "name": "Design Génératif", "group": "digital" },
+    {
+      "id": 11,
+      "name": "Generative adversarial network (GAN)",
+      "group": "digital"
+    },
+    { "id": 12, "name": "Megumi Naitoh", "group": "people" },
+    { "id": 13, "name": "APIs", "group": "digital" },
+    { "id": 14, "name": "Machines", "group": "digital" },
+    { "id": 15, "name": "Imprimante 3D", "group": "digital" },
+    { "id": 16, "name": "Open Food Facts", "group": "ressource" },
+    { "id": 17, "name": "Caméra", "group": "digital" },
+    { "id": 18, "name": "Microphone", "group": "digital" },
+    { "id": 19, "name": "Vases#44", "group": "project" },
+    { "id": 20, "name": "Francois Brument", "group": "people" },
+    { "id": 21, "name": "Mouvements", "group": "digital" },
+    {
+      "id": 22,
+      "name": "Plotter 2D",
+      "group": "digital",
+      "notes": [
+        "https://www.blackpepper.co.uk/what-we-think/blog/plots-and-plans-with-a-raspberry-pi-a-diy-polar-plotter",
+        "https://www.lafabriqueduloch.org/un-plotter-pour-2-francs-et-7-sous/?doing_wp_cron=1543890029.1575388908386230468750"
+      ]
+    },
+    { "id": 23, "name": "The Power of Love", "group": "project" },
+    { "id": 24, "name": "Mosaic Virus\nBitcoin per hour", "group": "project" },
+    { "id": 25, "name": "L'artisan électronique", "group": "project" },
+    { "id": 26, "name": "Tim Knapen", "group": "people" },
+    { "id": 27, "name": "Roue de potterie virtuelle", "group": "digital" },
+    { "id": 28, "name": "Wearables", "group": "digital" },
+    {
+      "id": 29,
+      "name": "MOOC Design Numérique",
+      "group": "ressource",
+      "url": "http://moocdigitalmedia.paris/cours/design-numerique/"
+    },
+    { "id": 30, "name": "Matteo Nasini", "group": "people" },
+    {
+      "id": 31,
+      "name": "Électroencéphalo\n-graphie (EEG)",
+      "group": "digital"
+    },
+    {
+      "id": 32,
+      "name": "Sparkling Matter",
+      "group": "project",
+      "url": "http://www.makery.info/2018/02/20/la-nuit-je-reve-en-ceramique/"
+    },
+    {
+      "id": 33,
+      "name": "Magic Ceramic Custom Synth",
+      "group": "project",
+      "url": "http://www.creativegallery.nl/index.php?option=com_content&view=article&id=9:theremin-magic-ceramic-doepfer-a-100-controller&catid=6:projects&Itemid=36"
+    },
+    { "id": 34, "name": "Électroaimants", "group": "digital" },
+    {
+      "id": 35,
+      "name": "data.gouv.fr\nDonnées Publiques de l’État et des administrations",
+      "group": "ressource",
+      "url": "https://www.data.gouv.fr/fr/"
+    },
+    {
+      "id": 36,
+      "name": "3D Machine Learning",
+      "group": "ressource",
+      "url": "https://github.com/timzhang642/3D-Machine-Learning"
+    },
+    { "id": 37, "name": "AI", "group": "digital", "url": "" },
+    { "id": 38, "name": "Open Hardware", "group": "digital", "url": "" },
+    { "id": 39, "name": "FabLab", "group": "digital", "url": "" },
+    { "id": 41, "name": "Jack", "group": "project", "url": "" },
+    { "id": 42, "name": "La Maker Faire", "group": "project", "url": "" },
+    { "id": 43, "name": "La Paillasse", "group": "project", "url": "" },
+    { "id": 44, "name": "Catherine Ramus", "group": "people", "url": "" },
+    {
+      "id": 45,
+      "name": "Open Mind Innovation",
+      "group": "project",
+      "url": "https://lab.omind.me"
+    },
+    {
+      "id": 46,
+      "name": "Celia Hodent",
+      "group": "people",
+      "url": "https://celiahodent.com/"
+    },
+    { "id": 47, "name": "Sciences Cognitives" },
+    {
+      "id": 48,
+      "name": "CeramBot",
+      "group": "project",
+      "url": "https://www.kickstarter.com/projects/210413417/cerambot-the-most-affordable-ceramic-3d-printer?ref=checkout_rewards_page"
+    },
+    { "id": 49, "name": "Frameworks CAD", "group": "digital" },
+    {
+      "id": 50,
+      "name": "OpenJSCAD",
+      "group": "project",
+      "url": "https://openjscad.org"
+    },
+    {
+      "id": 51,
+      "name": "CraftML",
+      "group": "project",
+      "url": "http://docs.craftml.io/"
+    },
+    {
+      "id": 52,
+      "name": "Ressources 3D",
+      "group": "ressource",
+      "url": "http://www.celles.net/wiki/TroisD"
+    },
+    {
+      "id": 53,
+      "name": "api.gouv.fr",
+      "group": "ressource",
+      "url": "https://api.gouv.fr/"
+    },
+    {
+      "id": 54,
+      "name": "Daniel Browns",
+      "group": "people",
+      "url": "http://danielbrowns.com/"
+    },
+    {
+      "id": 55,
+      "name": "Evan Wallace",
+      "group": "people",
+      "url": "http://madebyevan.com/"
+    },
+    { "id": 100, "name": "Usages" },
+    { "id": 101, "name": "Design Culinaire" },
+    { "id": 102, "name": "Restaurant Belafonte", "group": "people" },
+    {
+      "id": 103,
+      "name": "MOOC Design Culinaire",
+      "group": "ressource",
+      "url": "https://www.ferrandi-paris.fr/actualites/mooc-design-culinaire-2017-retour-sur-une-experience-pedagogique-reussie"
+    },
+    { "id": 200, "name": "Santé" },
+    { "id": 300, "name": "Architecture" },
+    { "id": 301, "name": "Danila Babko-Malyi", "group": "people" }
+  ],
+  "edges": [
+    { "from": 55, "to": 52, "name": "" },
+    { "from": 300, "to": 10, "name": "" },
+    { "from": 300, "to": 301, "name": "" },
+    { "from": 54, "to": 4, "name": "" },
+    { "from": 53, "to": 13, "name": "" },
+    { "from": 52, "to": 49, "name": "" },
+    { "from": 49, "to": 50, "name": "" },
+    { "from": 49, "to": 51, "name": "" },
+    { "from": 49, "to": 15, "name": "" },
+    { "from": 48, "to": 15, "name": "" },
+    { "from": 100, "to": 47, "name": "" },
+    { "from": 46, "to": 47, "name": "" },
+    { "from": 45, "to": 47, "name": "" },
+    { "from": 103, "to": 101, "name": "" },
+    { "from": 43, "to": 39, "name": "" },
+    { "from": 44, "to": 42, "name": "" },
+    { "from": 38, "to": 14, "name": "" },
+    { "from": 39, "to": 38, "name": "" },
+    { "from": 41, "to": 39, "name": "" },
+    { "from": 42, "to": 39, "name": "" },
+    { "from": 8, "to": 37, "name": "" },
+    { "from": 37, "to": 10, "name": "" },
+    { "from": 36, "to": 37, "name": "" },
+    { "from": 35, "to": 13, "name": "" },
+    { "from": 34, "to": 14, "name": "" },
+    { "from": 33, "to": 6, "name": "" },
+    { "from": 31, "to": 28, "name": "" },
+    { "from": 30, "to": 32, "name": "" },
+    { "from": 31, "to": 32, "name": "" },
+    { "from": 29, "to": 20 },
+    { "from": 16, "to": 200, "name": "" },
+    { "from": 2, "to": 1, "name": "" },
+    { "from": 2, "to": 9, "name": "" },
+    {
+      "from": 12,
+      "to": 9,
+      "name": "Ceramics Commons:\nSending ceramic works\nelectronically for a show"
+    },
+    { "from": 3, "to": 1 },
+    { "from": 4, "to": 3 },
+    { "from": 10, "to": 3 },
+    { "from": 5, "to": 28 },
+    { "from": 25, "to": 26 },
+    { "from": 25, "to": 27 },
+    { "from": 4, "to": 2, "name": "Contrôle" },
+    { "from": 4, "to": 5 },
+    { "from": 5, "to": 17 },
+    { "from": 5, "to": 18 },
+    { "from": 19, "to": 18 },
+    { "from": 19, "to": 20 },
+    { "from": 23, "to": 20 },
+    { "from": 24, "to": 13 },
+    { "from": 27, "to": 21 },
+    { "from": 14, "to": 22, "name": "Découpe sur plaque\nà consistance cuir" },
+    { "from": 8, "to": 10 },
+    { "from": 21, "to": 17 },
+    {
+      "from": 5,
+      "to": 6,
+      "name": "Traduction du mouvement\nvers l'imprimante 3D"
+    },
+    { "from": 5, "to": 7, "name": "" },
+    { "from": 11, "to": 37, "name": "" },
+    { "from": 13, "to": 8, "name": "" },
+    {
+      "from": 2,
+      "to": 14,
+      "name": "Peut-on penser d'autres\ntypologies d'imprimantes ?"
+    },
+    { "from": 14, "to": 15, "name": "" },
+    { "from": 100, "to": 1, "name": "" },
+    { "from": 101, "to": 100, "name": "" },
+    { "from": 101, "to": 102, "name": "" },
+    { "from": 13, "to": 16, "name": "" },
+    { "from": 16, "to": 101, "name": "" }
+  ]
+}
