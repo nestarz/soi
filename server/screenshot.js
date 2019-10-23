@@ -30,6 +30,7 @@ const screenshot = async (urls, paths, instances = 2) => {
         console.log("File exists. Aborting.", path);
         continue;
       }
+      
       fs.mkdir(dirname(path), { recursive: true }, err => {
         err && console.log("Error", err);
       });

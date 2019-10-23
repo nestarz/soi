@@ -1,24 +1,43 @@
 <template>
-  <div class="ressources">
-    <template v-for="({node}) in $page.ressources.edges">
-      <div :key="node.id">
-        <div>{{ node.title }}</div>
-        <p>{{ node.description.slice(0,110) }}</p>
+  <div class="resources">
+    <div v-for="({node: { id, count }}) in $page.categories.edges" :key="id">
+      <input :placeholder="count" type="number" @click="active = id" />
+      {{id}}
+    </div>
+    <div v-for="({node: { id, count, resources }}) in $page.tags.edges" :key="id">
+      <div class="tag">
+        <input :placeholder="count" type="number" />
+        {{id}}
       </div>
-      <img :src="node.screenshot" :key="node.id" />
-    </template>
+      <div v-for="{id, category, title} in resources" :key="id">
+        <div v-if="!active || active === category">{{title}}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <page-query>
 query {
-  ressources: allResources {
+  categories: allCategories {
     edges {
       node {
         id
-        title
-        description
-        screenshot
+        count
+      }
+    }
+  }
+  tags: allTags(sort: [{ by: "count", order: DESC }]) {
+    edges {
+      node {
+        id
+        count
+        resources {
+          id
+          title
+          description
+          screenshot
+          category
+        }
       }
     }
   }
@@ -29,17 +48,33 @@ query {
 export default {
   metaInfo: {
     title: "About us"
+  },
+  data() {
+    return {
+      active: null
+    };
   }
 };
 </script>
 
 <style scoped>
-.ressources {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.resources {
+  padding: 5px;
+  column-width: 300px;
+  column-fill: balance;
 }
 
 img {
   width: 100%;
+}
+
+h4 {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.tag {
+  border-bottom: 1px solid;
+  padding-bottom: 5px;
 }
 </style>
