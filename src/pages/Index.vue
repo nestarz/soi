@@ -4,7 +4,7 @@
       <div class="output">
         <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
       </div>
-      <input type="range" min="0" v-model="active" :max="categories.length" step="1" list="ticks" />
+      <input type="range" min="0" v-model="active" :max="categories.length - 1" step="1" list="ticks" />
       <datalist id="ticks">
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
