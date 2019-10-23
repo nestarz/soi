@@ -101,7 +101,7 @@ export default {
         }))
         .filter(tag => tag.byCategoryResources.length)
     );
-    console.log(resources.value);
+    console.log(categories.value);
     return { resources, categories, tags, active, activename, filtered };
   }
 };
