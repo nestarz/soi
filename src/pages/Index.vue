@@ -10,22 +10,22 @@
       </datalist>
     </div>
     <div class="main">
-      <div class="tags">
-        <template v-for="{ id, title, category, screenshot } in resources">
-          <img :src="screenshot" v-if="!activename || category === activename" :key="id" />
-        </template>
-      </div>
-      <div class="tags">
-        <template class="tag" v-for="({ id: tag, count, byCategoryResources }) in filtered">
-          <div class="title" :key="tag">{{ tag }}</div>
-          <template v-for="{category, resources} in byCategoryResources">
-            <template v-for="{ id, title, category, screenshot } in resources">
-              <a :href="screenshot" :key="category+tag+id+Math.random()">{{ title }}</a>
-            </template>
-          </template>
-        </template>
+    <div class="tags">
+      <div v-for="{ id, title, category, screenshot } in resources" :key="id">
+        <img :src="screenshot" v-if="!activename || category === activename" />
       </div>
     </div>
+    <div class="tags">
+      <div class="tag" v-for="({ id, count, byCategoryResources }) in filtered" :key="id">
+        <div class="title">{{ id }}</div>
+        <div class="category" v-for="{category, resources} in byCategoryResources" :key="category">
+          <div v-for="{ id, title, category, screenshot } in resources" :key="id">
+            <a :href="screenshot">{{ title }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -87,7 +87,7 @@ export default {
     const resources = computed(() => parent.$page.resources.edges.map(node));
     const categories = computed(() => parent.$page.categories.edges.map(node));
     const tags = computed(() => parent.$page.tags.edges.map(node));
-    const active = ref(6);
+    const active = ref(null);
     const activename = computed(
       () => active.value && categories.value[active.value].id
     );
@@ -101,6 +101,7 @@ export default {
         }))
         .filter(tag => tag.byCategoryResources.length)
     );
+    console.log(categories.value);
     return { resources, categories, tags, active, activename, filtered };
   }
 };
@@ -162,9 +163,5 @@ h4 {
 .categories input {
   width: 100%;
   box-sizing: content-box;
-}
-
-a {
-  display: block;
 }
 </style>
