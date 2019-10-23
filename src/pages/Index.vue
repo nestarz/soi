@@ -12,7 +12,7 @@
     <div class="main">
       <div class="tags">
         <template v-for="{ id, title, category, screenshot } in resources">
-          <img :src="screenshot" v-if="!activename || category === activename" :key="id" />
+          <img :src="screenshot" v-show="!activename || category === activename" :key="id" />
         </template>
       </div>
       <div class="tags">
