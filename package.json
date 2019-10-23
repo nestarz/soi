@@ -7,6 +7,7 @@
     "explore": "gridsome explore"
   },
   "dependencies": {
+    "@vue/composition-api": "^0.3.2",
     "gridsome": "^0.7.0",
     "puppeteer": "^1.20.0"
   }

@@ -16,39 +16,103 @@ module.exports = function(api) {
       })
     );
 
-    // Categories
-    const categories = {
-      collection: store.addCollection({ typeName: "Categories" }),
-      items: resources.items.reduce((res, { category, slug }) => {
-        res[category] = [...(res[category] || []), slug];
-        return res;
-      }, {})
-    };
-    Object.entries(categories.items).forEach(([category, resources]) =>
-      categories.collection.addNode({
-        id: category,
-        count: resources.length,
-        resources: resources.map(id => store.createReference("Resources", id))
-      })
-    );
-
     // Tags
     const tags = {
       collection: store.addCollection({ typeName: "Tags" }),
-      items: resources.items.reduce((res, { tags, slug }) => {
-        if (!tags) return res;
-        tags.forEach(tag => (res[tag] = [...(res[tag] || []), slug]));
+      items: resources.items.reduce((res, resource) => {
+        if (!resource.tags) return res;
+        resource.tags.forEach(
+          tag => (res[tag] = [...(res[tag] || []), resource])
+        );
         return res;
       }, {})
     };
+
+    // Categories
+    const categories = {
+      collection: store.addCollection({ typeName: "Categories" }),
+      items: resources.items.reduce((res, resource) => {
+        const { category } = resource;
+        res[category] = [...(res[category] || []), resource];
+        return res;
+      }, {})
+    };
+
+    // Tags by Category
+    tags.byCategory = Object.entries(tags.items).reduce((res, [tag, _]) => {
+      const resourcesByCategory = Object.entries(categories.items).map(
+        ([category, resources]) => ({
+          category,
+          resources: resources.filter(resource =>
+            (resource.tags || []).includes(tag)
+          )
+        })
+      );
+      res[tag] = [
+        ...(res[tag] || []),
+        ...resourcesByCategory.filter(({ _, resources }) => resources.length)
+      ];
+      return res;
+    }, {});
+
+    // Categories by Tags
+    categories.byTag = Object.entries(categories.items).reduce(
+      (res, [category, _]) => {
+        const resourcesByTag = Object.entries(tags.items).map(
+          ([tag, resources]) => ({
+            tag,
+            resources: resources.filter(
+              resource => resource.category === category
+            )
+          })
+        );
+        res[category] = [
+          ...(res[category] || []),
+          ...resourcesByTag.filter(({ _, resources }) => resources.length)
+        ];
+        return res;
+      },
+      {}
+    );
+
+    // Populate Tags
+    console.log(tags.byCategory);
     Object.entries(tags.items).forEach(([tag, resources]) =>
       tags.collection.addNode({
         id: tag,
         count: resources.length,
-        resources: resources.map(id => store.createReference("Resources", id))
+        allResources: resources.map(({ slug: id }) =>
+          store.createReference("Resources", id)
+        ),
+        byCategoryResources: tags.byCategory[tag].map(
+          ({ category, resources }) => ({
+            category,
+            resources: resources.map(({ slug: id }) =>
+              store.createReference("Resources", id)
+            )
+          })
+        )
       })
     );
-  });
 
+    // Populate Categories
+    Object.entries(categories.items).forEach(([category, resources]) => {
+      categories.collection.addNode({
+        id: category,
+        count: resources.length,
+        allResources: resources.map(({ slug: id }) =>
+          store.createReference("Resources", id)
+        ),
+        byTagResources: categories.byTag[category].map(
+          ({ tag, resources }) => ({
+            tag,
+            resources: resources.map(({ slug: id }) =>
+              store.createReference("Resources", id)
+            )
+          })
+        )
+      });
+    });
+  });
   api.createPages(({ createPage }) => {});
 };

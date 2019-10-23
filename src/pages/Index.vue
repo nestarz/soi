@@ -1,27 +1,56 @@
 <template>
   <div class="resources">
-    <div v-for="({node: { id, count }}) in $page.categories.edges" :key="id">
-      <input :placeholder="count" type="number" @click="active = id" />
-      {{id}}
-    </div>
-    <div v-for="({node: { id, count, resources }}) in $page.tags.edges" :key="id">
-      <div class="tag">
-        {{id}}
+    <div class="categories">
+      <div class="output">
+        <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
       </div>
-      <div v-for="{id, category, title} in resources" :key="id">
-        <div v-if="!active || active === category">{{title}}</div>
+      <input type="range" min="0" v-model="active" :max="categories.length" step="1" list="ticks" />
+      <datalist id="ticks">
+        <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
+      </datalist>
+    </div>
+    <div class="main">
+    <div class="tags">
+      <div v-for="{ id, title, category, screenshot } in resources" :key="id">
+        <img :src="screenshot" v-if="!activename || category === activename" />
       </div>
     </div>
+    <div class="tags">
+      <div class="tag" v-for="({ id, count, byCategoryResources }) in filtered" :key="id">
+        <div class="title">{{ id }}</div>
+        <div class="category" v-for="{category, resources} in byCategoryResources" :key="category">
+          <div v-for="{ id, title, category, screenshot } in resources" :key="id">
+            <a :href="screenshot">{{ title }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
 <page-query>
 query {
+  resources: allResources {
+    edges {
+      node {
+        screenshot
+        category
+      }
+    }
+  }
   categories: allCategories {
     edges {
       node {
         id
         count
+          allResources {
+            id
+            title
+            description
+            screenshot
+            category
+          }
       }
     }
   }
@@ -30,12 +59,15 @@ query {
       node {
         id
         count
-        resources {
-          id
-          title
-          description
-          screenshot
+        byCategoryResources {
           category
+          resources {
+            id
+            title
+            description
+            screenshot
+            category
+          }
         }
       }
     }
@@ -44,23 +76,47 @@ query {
 </page-query>
 
 <script>
+import { ref, reactive, computed } from "@vue/composition-api";
+
 export default {
   metaInfo: {
     title: "About us"
   },
-  data() {
-    return {
-      active: null
-    };
+  setup(props, { parent }) {
+    const node = edge => edge.node;
+    const resources = computed(() => parent.$page.resources.edges.map(node));
+    const categories = computed(() => parent.$page.categories.edges.map(node));
+    const tags = computed(() => parent.$page.tags.edges.map(node));
+    const active = ref(null);
+    const activename = computed(
+      () => active.value && categories.value[active.value].id
+    );
+    const filtered = computed(() =>
+      tags.value
+        .map(tag => ({
+          ...tag,
+          byCategoryResources: tag.byCategoryResources.filter(
+            ({ category }) => category === activename.value || !activename.value
+          )
+        }))
+        .filter(tag => tag.byCategoryResources.length)
+    );
+    console.log(resources.value);
+    return { resources, categories, tags, active, activename, filtered };
   }
 };
 </script>
 
 <style scoped>
-.resources {
-  padding: 5px;
-  column-width: 300px;
+.tags {
+  column-width: 200px;
   column-fill: balance;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
 }
 
 img {
@@ -73,11 +129,39 @@ h4 {
 }
 
 .tag {
-    font-size: 24px;
-    line-height: 32px;
-    padding-bottom: 2px;
-    border-bottom: 1px #000 solid;
-    margin-bottom: 4px;
-    padding-left: 8px;
+  margin-bottom: 7px;
+}
+
+.tag > .title {
+  font-size: 24px;
+  line-height: 32px;
+  padding-bottom: 4px;
+  margin-bottom: 3px;
+  color: grey;
+}
+
+.resources {
+  margin: 1em;
+}
+
+.categories .output {
+  display: flex;
+  justify-content: space-between;
+}
+
+.categories output {
+  display: block;
+  transform: skewX(10deg);
+}
+@media screen and (max-width: 992px) {
+  .categories output {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
+}
+
+.categories input {
+  width: 100%;
+  box-sizing: content-box;
 }
 </style>
