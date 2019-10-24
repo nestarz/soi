@@ -39,7 +39,7 @@ const screenshot = async (urls_paths, instances = 2) => {
       });
 
       try {
-        const gotoconf = { waitUntil: "networkidle0", timeout: 20000 };
+        const gotoconf = { waitUntil: "networkidle0", timeout: 1 };
         await page.goto(url, gotoconf);
         const buffer = await page.screenshot({ path: w800 });
         await sharp(buffer)

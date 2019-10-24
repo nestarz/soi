@@ -1,37 +1,32 @@
 <template>
   <div class="resources">
     <div class="categories">
-      <output v-for="({ id }, index) in categories" :key="id">{{id}}</output>
+      <output v-for="({ id }) in categories" :key="id">{{id}}</output>
       <input type="range" v-model="active" min="0" :max="categories.length - 1" step=".1" list="t" />
       <datalist id="t">
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
     </div>
-    <earth></earth>
     <div class="select">
       <select>
-        <option>Infrastructure</option>
+        <option>Everything</option>
+        <option disabled>Infrastructure</option>
+        <option disabled>HTLT TV</option>
       </select>
-      <select multiple>
-        <option v-for="({ id }, index) in tags" :key="id">{{ id }}</option>
+      <input type="range" v-model="mode" min="0" :max="modes" step=".1" list="t" />
+      <select multiple v-model="selected">
+        <option :value="[]">Everything</option>
+        <optgroup :label="selected.length ? selected : 'Filter by tags'">
+        <option v-for="({ id }) in tags" :key="id">{{ id }}</option>
+        </optgroup>
       </select>
     </div>
-    <div class="main">
-      <div class="tags">
-        <template v-for="{ id, title, category, screenshot } in resources">
-          <img :src="screenshot.w400" v-show="!activename || category === activename" :key="id" />
-          <a :href="screenshot.w400" :key="category+id+Math.random()">{{ title }}</a>
-        </template>
-      </div>
-      <div class="tags tag">
-        <template v-for="({ id: tag, count, byCategoryResources }) in filtered">
-          <div class="title" :key="tag">{{ tag }}</div>
-          <template v-for="{category, resources} in byCategoryResources">
-            <template v-for="{ id, title, category, screenshot } in resources">
-              <a :href="screenshot.w400" :key="category+tag+id+Math.random()">{{ title }}</a>
-            </template>
-          </template>
-        </template>
+    <div class="tags" :class="[`mode${Math.floor(mode)}`]">
+      <div v-for="({ id, title, category, screenshot, description, url, tags }) in resources" 
+      v-if="(!activename || category === activename) && (!selected[0].length || tags.some(t => selected.includes(t)))" :key="id">
+        <a :href="url" v-if="screenshot.w400"><img :src="screenshot.w400" /></a>
+        <a :href="url">{{ title }}</a>
+        <p>{{ Math.floor(mode) !== 2 ? digest(description, 100): description }}</p>
       </div>
     </div>
   </div>
@@ -42,6 +37,10 @@ query {
   resources: allResources {
     edges {
       node {
+        title
+        description
+        url
+        tags
         screenshot {
           w400
           w800
@@ -122,15 +121,70 @@ export default {
         }))
         .filter(tag => tag.byCategoryResources.length)
     );
-    return { resources, categories, tags, active, activename, filtered };
+    return {
+      resources,
+      categories,
+      tags,
+      active,
+      activename,
+      filtered,
+      selected: ref([[]]),
+      modes: 4,
+      mode: ref(1),
+      digest: (string, length) =>
+        string && string.length > length
+          ? `${
+              (string.match(RegExp(`.{${length}}\\S*`)) || [
+                string.substring(0, length)
+              ])[0]
+            }...`
+          : string
+    };
   }
 };
 </script>
 
 <style scoped>
 .tags {
-  column-width: 200px;
-  column-fill: balance;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 5px;
+}
+
+.tags a {
+  white-space: nowrap; 
+  background: white; 
+  margin-left: -5px; 
+  padding-left: 5px;
+}
+
+.tags p {
+  margin: 0;
+}
+
+.tags p,
+.tags a:nth-child(1),
+.tags a:nth-child(2) {
+  display: none;
+}
+
+.tags.mode2,
+.tags.mode0 {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 44em;
+}
+
+.tags.mode1 a:nth-child(1),
+.tags.mode0 a:nth-child(2),
+.tags.mode2 a:nth-child(2),
+.tags.mode2 p,
+.tags.mode3 a:nth-child(1),
+.tags.mode4 a:nth-child(1),
+.tags.mode3 a:nth-child(2),
+.tags.mode4 a:nth-child(2),
+.tags.mode4 p {
+  display: block;
 }
 
 .main {
@@ -143,9 +197,10 @@ export default {
 .select {
   grid-area: nav;
   display: grid;
-  grid-template-rows: min-content 1fr;
+  grid-template-rows: min-content min-content 1fr;
   gap: 7px 7px;
   width: 152px;
+  min-height: 100vh;
 }
 
 svg {
