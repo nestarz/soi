@@ -149,6 +149,8 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 5px;
+  grid-area: main;
+  grid-auto-rows: min-content;
 }
 
 .tags a {
@@ -200,7 +202,7 @@ export default {
   grid-template-rows: min-content min-content 1fr;
   gap: 7px 7px;
   width: 152px;
-  min-height: 100vh;
+  min-height: 93vh;
 }
 
 .select select {
@@ -241,6 +243,25 @@ img {
     "nav  main";
   grid-template-columns: 153px 1fr;
   grid-gap: 5px;
+}
+
+@media screen and (max-width: 992px) {
+  .resources {
+    grid-template-areas:
+      "head head"
+      "nav  nav"
+      "main  main";
+  }
+  .select {
+  grid-area: nav;
+  display: grid;
+  width: 100%;
+  min-height: initial;
+}
+
+.select select {
+  max-width: none;
+}
 }
 
 .categories {
