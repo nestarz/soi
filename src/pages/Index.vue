@@ -203,6 +203,10 @@ export default {
   min-height: 100vh;
 }
 
+.select select {
+  max-width: 150px;
+}
+
 svg {
   grid-area: map;
   height: 100vh;
