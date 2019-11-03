@@ -23,6 +23,7 @@ const screenshot = async (urls_paths, instances = 2) => {
   const runs = chunks(urls_paths, instances).map(async chunk => {
     const page = await browser.newPage();
     for (const { url, w800, w400 } of chunk) {
+      console.log(w400);
       if (!url) {
         console.log("Url null. ", url, w800);
         continue;

@@ -24,7 +24,7 @@
     <div class="tags" :class="[`mode${Math.floor(mode)}`]">
       <div v-for="({ id, title, category, screenshot, description, url, tags }) in resources" 
       v-if="(!activename || category === activename) && (!selected[0].length || tags.some(t => selected.includes(t)))" :key="id">
-        <a :href="url" v-if="screenshot.w400"><img :src="screenshot.w400" /></a>
+        <a :href="url" v-if="screenshot.w400"><g-image :src="screenshot.w400" width="300" /></a>
         <a :href="url">{{ title }}</a>
         <p>{{ Math.floor(mode) !== 2 ? digest(description, 100): description }}</p>
       </div>
@@ -93,14 +93,10 @@ query {
 
 <script>
 import { ref, reactive, computed } from "@vue/composition-api";
-import earth from "../components/earth.vue";
 
 export default {
   metaInfo: {
     title: "resources"
-  },
-  components: {
-    earth
   },
   setup(props, { parent }) {
     const node = edge => edge.node;

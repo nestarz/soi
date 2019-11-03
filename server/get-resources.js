@@ -25,8 +25,8 @@ module.exports = get = async () => {
   }));
   const urls_path = resources.map(({ url, slug }) => ({
     url,
-    w800: path.join("static/", "screenshots", `${slug}.800.png`),
-    w400: path.join("static/", "screenshots", `${slug}.400.png`)
+    w800: path.join(process.cwd(), "static", "screenshots", `${slug}.800.png`),
+    w400: path.join(process.cwd(), "static", "screenshots", `${slug}.400.png`)
   }));
   const success = await screenshot(urls_path, 4);
   resources = resources.map(resource => {
@@ -34,8 +34,8 @@ module.exports = get = async () => {
     return {
       ...resource,
       screenshot: {
-        w400: screenshot ? screenshot.w400.replace("static/", "") : null,
-        w800: screenshot ? screenshot.w800.replace("static/", "") : null
+        w400: screenshot ? screenshot.w400 : null,
+        w800: screenshot ? screenshot.w800: null
       }
     };
   });

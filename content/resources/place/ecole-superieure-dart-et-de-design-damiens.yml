@@ -1,0 +1,20 @@
+alias: ESAD
+category: place
+description: "L\u2019\xE9cole enseigne le design graphique, le design num\xE9rique,\
+  \ la typographie et l\u2019image anim\xE9e 3D (d\xE9partement Waide Somme). Elle\
+  \ propose \xE9galement des stages de formation continue pour les professionnels\
+  \ et demandeurs d\u2019emploi."
+location:
+  city: Amiens
+  country: France
+title:  "\xC9cole sup\xE9rieure d\u2019art et de design d\u2019Amiens"
+tags:
+- interaction
+- design
+- web
+- communication
+- graphism
+- 3d
+- typography
+type: school
+url: http://www.esad-amiens.fr
