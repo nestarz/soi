@@ -1,11 +1,11 @@
 <template>
   <div class="resources">
     <div class="categories">
-      <output>Everything</output>
-      <output v-for="({ id }) in categories" :key="id">{{id}}</output>
-      <input type="range" v-model="active" min="0" :max="categories.length - 1" step=".1" list="t" />
+      <output @click="active = 0">everything</output>
+      <output v-for="({ id }, index) in categories" :key="id" @click="active = index + 1">{{id}}</output>
+      <input type="range" v-model="active" min="0" :max="categories.length" step=".1" list="t" />
       <datalist id="t">
-        <option>Everything</option>
+        <option>everything</option>
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
     </div>
@@ -17,81 +17,36 @@
       </select>
       <input type="range" v-model="mode" min="0" :max="modes" step=".1" list="t" />
       <select multiple v-model="selected">
-        <option :value="[]">Everything</option>
+        <option :value="null">Everything</option>
         <optgroup :label="selected.length ? selected : 'Filter by tags'">
-        <option v-for="({ id }) in tags" :key="id">{{ id }}</option>
+          <option v-for="({ id }) in tags" :key="id">{{ id }}</option>
         </optgroup>
       </select>
     </div>
-    <div class="tags" :class="[`mode${Math.floor(mode)}`]">
-      <div v-for="({ id, title, category, screenshot, description, url, tags }) in resources" 
-      v-if="(!activename || category === activename) && (!selected[0].length || tags.some(t => selected.includes(t)))" :key="id">
-        <a :href="url" v-if="screenshot.w200"><img :src="screenshot.w200" loading="lazy" /></a>
+    <div class="main" :class="[`mode${Math.floor(mode)}`]">
+      <div v-for="({ id, title, description, url, screenshot }) in filtered" :key="id">
+        <a class="image-container" :href="url">
+          <g-image :src="screenshot.w200" width="200" v-if="screenshot.w200" />
+        </a>
         <a :href="url">{{ title }}</a>
-        <p>{{ Math.floor(mode) !== 2 ? digest(description, 100): description }}</p>
+        <p v-if=" Math.floor(mode) === 2">{{ description }}</p>
+        <p v-else>{{ digest(description, 100) }}</p>
       </div>
     </div>
   </div>
 </template>
 
-<page-query>
-query {
-  resources: allResources {
-    edges {
-      node {
-        title
-        description
-        url
-        tags
-        screenshot {
-          w200
-        }
-        category
-      }
-    }
-  }
-  categories: allCategories {
-    edges {
-      node {
-        id
-        count
-          allResources {
-            id
-            title
-            description
-            screenshot {
-              w200
-            }
-            category
-          }
-      }
-    }
-  }
-  tags: allTags(sort: [{ by: "count", order: DESC }]) {
-    edges {
-      node {
-        id
-        count
-        byCategoryResources {
-          category
-          resources {
-            id
-            title
-            description
-            screenshot {
-              w200
-            }
-            category
-          }
-        }
-      }
-    }
-  }
-}
-</page-query>
-
 <script>
 import { ref, reactive, computed } from "@vue/composition-api";
+
+const digest = (string, length) =>
+  string && string.length > length
+    ? `${
+        (string.match(RegExp(`.{${length}}\\S*`)) || [
+          string.substring(0, length)
+        ])[0]
+      }...`
+    : string;
 
 export default {
   metaInfo: {
@@ -102,93 +57,94 @@ export default {
     const resources = computed(() => parent.$page.resources.edges.map(node));
     const categories = computed(() => parent.$page.categories.edges.map(node));
     const tags = computed(() => parent.$page.tags.edges.map(node));
-    const active = ref(6);
+    const active = ref(0);
+    const selected = ref([null]);
     const activename = computed(
-      () => active.value && categories.value[Math.floor(active.value)].id
+      () =>
+        (Math.floor(active.value) &&
+          categories.value[Math.floor(active.value) - 1].id) ||
+        null
     );
     const filtered = computed(() =>
-      tags.value
-        .map(tag => ({
-          ...tag,
-          byCategoryResources: tag.byCategoryResources.filter(
-            ({ category }) => category === activename.value || !activename.value
-          )
-        }))
-        .filter(tag => tag.byCategoryResources.length)
+      resources.value
+        .filter(resource =>
+          activename.value ? resource.category === activename.value : true
+        )
+        .filter(resource =>
+          selected.value[0]
+            ? resource.main.some(tag => selected.value.includes(tag))
+            : true
+        )
     );
     return {
       resources,
       categories,
+      selected,
       tags,
       active,
       activename,
       filtered,
-      selected: ref([[]]),
       modes: 4,
-      mode: ref(1),
-      digest: (string, length) =>
-        string && string.length > length
-          ? `${
-              (string.match(RegExp(`.{${length}}\\S*`)) || [
-                string.substring(0, length)
-              ])[0]
-            }...`
-          : string
+      mode: ref(4),
+      digest
     };
   }
 };
 </script>
 
 <style scoped>
-.tags {
+.resources {
+  font-family: system-ui;
+}
+
+.main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 5px;
+  grid-gap: 10px;
   grid-area: main;
   grid-auto-rows: min-content;
 }
 
-.tags a {
-  white-space: nowrap; 
-  background: white; 
-  margin-left: -5px; 
+.main .image-container:empty {
+  width: 100%;
+  padding-bottom: 76.2%;
+  background: hsl(0, 0%, 97%);
+}
+
+.main a {
+  white-space: nowrap;
+  background: white;
+  margin-left: -5px;
   padding-left: 5px;
 }
 
-.tags p {
+.main p {
   margin: 0;
 }
 
-.tags p,
-.tags a:nth-child(1),
-.tags a:nth-child(2) {
+.main p,
+.main a:nth-child(1),
+.main a:nth-child(2) {
   display: none;
 }
 
-.tags.mode2,
-.tags.mode0 {
+.main.mode2,
+.main.mode0 {
   display: grid;
   grid-template-columns: 1fr;
   max-width: 44em;
 }
 
-.tags.mode1 a:nth-child(1),
-.tags.mode0 a:nth-child(2),
-.tags.mode2 a:nth-child(2),
-.tags.mode2 p,
-.tags.mode3 a:nth-child(1),
-.tags.mode4 a:nth-child(1),
-.tags.mode3 a:nth-child(2),
-.tags.mode4 a:nth-child(2),
-.tags.mode4 p {
+.main.mode1 a:nth-child(1),
+.main.mode0 a:nth-child(2),
+.main.mode2 a:nth-child(2),
+.main.mode2 p,
+.main.mode3 a:nth-child(1),
+.main.mode4 a:nth-child(1),
+.main.mode3 a:nth-child(2),
+.main.mode4 a:nth-child(2),
+.main.mode4 p {
   display: block;
-}
-
-.main {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 25px;
-  grid-area: main;
 }
 
 .select {
@@ -202,17 +158,6 @@ export default {
 
 .select select {
   max-width: 150px;
-}
-
-svg {
-  grid-area: map;
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0vh;
-  pointer-events: none;
-  right: 0;
-  left: 0;
 }
 
 img {
@@ -237,7 +182,7 @@ img {
     "nav  main"
     "nav  main";
   grid-template-columns: 153px 1fr;
-  grid-gap: 5px;
+  grid-gap: 10px;
 }
 
 @media screen and (max-width: 992px) {
@@ -248,15 +193,15 @@ img {
       "main  main";
   }
   .select {
-  grid-area: nav;
-  display: grid;
-  width: 100%;
-  min-height: initial;
-}
+    grid-area: nav;
+    display: grid;
+    width: 100%;
+    min-height: initial;
+  }
 
-.select select {
-  max-width: none;
-}
+  .select select {
+    max-width: none;
+  }
 }
 
 .categories {
@@ -291,3 +236,40 @@ a {
   display: block;
 }
 </style>
+
+
+<page-query>
+query {
+  resources: allResources {
+    edges {
+      node {
+        title
+        description
+        url
+        tags
+        category
+        screenshot {
+          w200
+        }
+      }
+    }
+  }
+  categories: allCategories {
+    edges {
+      node {
+        id
+        count
+      }
+    }
+  }
+  
+  tags: allTags(sort: [{ by: "count", order: DESC }]) {
+    edges {
+      node {
+        id
+        count
+      }
+    }
+  }
+}
+</page-query>
