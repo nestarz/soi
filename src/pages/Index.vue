@@ -1,9 +1,11 @@
 <template>
   <div class="resources">
     <div class="categories">
+      <output>Everything</output>
       <output v-for="({ id }) in categories" :key="id">{{id}}</output>
       <input type="range" v-model="active" min="0" :max="categories.length - 1" step=".1" list="t" />
       <datalist id="t">
+        <option>Everything</option>
         <option v-for="({ id }, index) in categories" :key="id">{{ index }}</option>
       </datalist>
     </div>
@@ -24,7 +26,7 @@
     <div class="tags" :class="[`mode${Math.floor(mode)}`]">
       <div v-for="({ id, title, category, screenshot, description, url, tags }) in resources" 
       v-if="(!activename || category === activename) && (!selected[0].length || tags.some(t => selected.includes(t)))" :key="id">
-        <a :href="url" v-if="screenshot.w400"><g-image :src="screenshot.w400" width="300" /></a>
+        <a :href="url" v-if="screenshot.w200"><img :src="screenshot.w200" loading="lazy" /></a>
         <a :href="url">{{ title }}</a>
         <p>{{ Math.floor(mode) !== 2 ? digest(description, 100): description }}</p>
       </div>
@@ -42,8 +44,7 @@ query {
         url
         tags
         screenshot {
-          w400
-          w800
+          w200
         }
         category
       }
@@ -59,8 +60,7 @@ query {
             title
             description
             screenshot {
-              w400
-              w800
+              w200
             }
             category
           }
@@ -79,8 +79,7 @@ query {
             title
             description
             screenshot {
-              w400
-              w800
+              w200
             }
             category
           }

@@ -22,7 +22,7 @@ const screenshot = async (urls_paths, instances = 2) => {
   const success = [];
   const runs = chunks(urls_paths, instances).map(async chunk => {
     const page = await browser.newPage();
-    for (const { url, w800, w400 } of chunk) {
+    for (const { url, w800, w400, w200 } of chunk) {
       console.log(w400);
       if (!url) {
         console.log("Url null. ", url, w800);
@@ -30,7 +30,10 @@ const screenshot = async (urls_paths, instances = 2) => {
       }
 
       if (fs.existsSync(w800)) {
-        success.push({ url, w800, w400 });
+        success.push({ url, w800, w400, w200 });
+        await sharp(w800)
+          .resize(200)
+          .toFile(w200);
         console.log("File exists. Aborting.", w800);
         continue;
       }
@@ -43,10 +46,13 @@ const screenshot = async (urls_paths, instances = 2) => {
         const gotoconf = { waitUntil: "networkidle0", timeout: 1 };
         await page.goto(url, gotoconf);
         const buffer = await page.screenshot({ path: w800 });
-        await sharp(buffer)
+        await sharp(w800)
           .resize(400)
           .toFile(w400);
-        success.push({ url, w800, w400 });
+        await sharp(w800)
+          .resize(200)
+          .toFile(w200);
+        success.push({ url, w800, w400, w200 });
         console.log("Success", url);
       } catch (error) {
         console.log("Error.", error, url);
