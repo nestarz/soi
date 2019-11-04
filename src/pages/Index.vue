@@ -108,6 +108,8 @@ export default {
 <style scoped>
 .resources {
   font-family: system-ui;
+  max-width: 100vw;
+  overflow: hidden;
 }
 
 nav {
@@ -253,6 +255,7 @@ img {
 
 .categories output {
   display: block;
+  width: 18px;
 }
 @media screen and (max-width: 992px) {
   .categories output {
