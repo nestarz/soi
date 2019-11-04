@@ -25,7 +25,7 @@
     <div class="main" :class="[`mode${Math.floor(mode)}`]">
       <div v-for="({ id, title, description, url, screenshot }) in filtered" :key="id">
         <a class="image-container" :href="url">
-          <g-image :src="screenshot.w200" width="200" v-if="screenshot.w200" />
+          <g-image :src="screenshot.w200" width="200" v-if="screenshot.w200" blur="0" />
         </a>
         <a :href="url">{{ title }}</a>
         <p v-if=" Math.floor(mode) === 2">{{ description }}</p>
@@ -105,11 +105,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+body {
+  overflow-x: hidden;
+}
+
 .resources {
   font-family: system-ui;
   max-width: 100vw;
-  overflow: hidden;
 }
 
 nav {
@@ -126,11 +129,11 @@ nav {
 }
 
 nav a {
-  width: 10rem;
-  height: 10rem;
-  border-radius: 5rem;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 2.5rem;
   margin: 2rem;
-  background: hsl(100, 180%, 31%);
+  background: hsl(100, 200%, 80%);
   pointer-events: all;
 }
 
@@ -246,6 +249,9 @@ img {
   justify-content: space-between;
   flex-wrap: wrap;
   grid-area: head;
+  position: sticky;
+  top: 0px;
+  background: white;
 }
 
 .categories .output {
@@ -288,7 +294,7 @@ query {
         tags
         category
         screenshot {
-          w200
+          w200 (width: 200, quality: 1, blur: 0)
         }
       }
     }
