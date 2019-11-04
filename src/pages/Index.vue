@@ -92,7 +92,7 @@ export default {
             : true
         )
     );
-    const currInterest = ref(10);
+    const currInterest = ref(0);
     return {
       currInterest,
       resources,
