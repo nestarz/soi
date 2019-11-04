@@ -120,6 +120,7 @@ nav {
   justify-content: center;
   align-items: flex-end;
   mix-blend-mode: hard-light;
+  pointer-events: none;
 }
 
 nav a {
@@ -128,6 +129,7 @@ nav a {
   border-radius: 5rem;
   margin: 2rem;
   background: hsl(100, 180%, 31%);
+  pointer-events: all;
 }
 
 .main {
