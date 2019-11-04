@@ -15,6 +15,7 @@
         <option v-for="{id} in projects" :key="id">{{ id }}</option>
       </select>
       <input type="range" v-model="mode" min="0" :max="modes" step=".1" list="t" />
+      <input type="range" v-model="currInterest" min="0" :max="10" step="1" />
       <select multiple v-model="selected">
         <option :value="null">Everything</option>
         <optgroup :label="selected.length ? selected : 'Filter by tags'">
@@ -23,7 +24,11 @@
       </select>
     </div>
     <div class="main" :class="[`mode${Math.floor(mode)}`]">
-      <div v-for="({ id, title, description, url, screenshot }) in filtered" :key="id">
+      <div
+        v-for="({ id, title, description, url, screenshot, interest }) in filtered"
+        :key="id"
+        :style="currInterest > 0 && `opacity: ${(10 - Math.abs(interest - currInterest))/10 + 0.05}`"
+      >
         <a class="image-container" :href="url">
           <g-image :src="screenshot.w200" width="200" v-if="screenshot.w200" blur="0" />
         </a>
@@ -87,7 +92,9 @@ export default {
             : true
         )
     );
+    const currInterest = ref(10);
     return {
+      currInterest,
       resources,
       categories,
       selected,
@@ -145,6 +152,10 @@ nav a {
   grid-auto-rows: min-content;
 }
 
+.main > div {
+  position: relative;
+}
+
 .main .image-container:empty {
   width: 100%;
   padding-bottom: 76.2%;
@@ -190,7 +201,7 @@ nav a {
 .select {
   grid-area: nav;
   display: grid;
-  grid-template-rows: min-content min-content 1fr;
+  grid-template-rows: min-content min-content min-content 1fr;
   gap: 7px 7px;
   width: 152px;
   min-height: 93vh;
@@ -279,6 +290,11 @@ img {
 a {
   display: block;
 }
+
+input,
+select {
+  border: none;
+}
 </style>
 
 
@@ -293,6 +309,7 @@ query {
         url
         tags
         category
+        interest
         screenshot {
           w200 (width: 200, quality: 1, blur: 0)
         }
