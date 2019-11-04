@@ -16,6 +16,16 @@ module.exports = function(api) {
       })
     );
 
+    // Projects
+    const projects = {
+      collection: store.addCollection({ typeName: "Projects" }),
+      items: resources.items.reduce((res, resource) => {
+        const { project } = resource;
+        res[project] = [...(res[project] || []), resource];
+        return res;
+      }, {})
+    };
+
     // Tags
     const tags = {
       collection: store.addCollection({ typeName: "Tags" }),
@@ -112,6 +122,18 @@ module.exports = function(api) {
         )
       });
     });
+
+    // Populate Projects
+    Object.entries(projects.items).forEach(([project, resources]) => {
+      projects.collection.addNode({
+        id: project,
+        count: resources.length,
+        allResources: resources.map(({ slug: id }) =>
+          store.createReference("Resources", id)
+        )
+      });
+    });
   });
+
   api.createPages(({ createPage }) => {});
 };

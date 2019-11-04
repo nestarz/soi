@@ -31,9 +31,6 @@ const screenshot = async (urls_paths, instances = 2) => {
 
       if (fs.existsSync(w800)) {
         success.push({ url, w800, w400, w200 });
-        await sharp(w800)
-          .resize(200)
-          .toFile(w200);
         console.log("File exists. Aborting.", w800);
         continue;
       }
@@ -43,7 +40,7 @@ const screenshot = async (urls_paths, instances = 2) => {
       });
 
       try {
-        const gotoconf = { waitUntil: "networkidle0", timeout: 1 };
+        const gotoconf = { waitUntil: "networkidle0", timeout: 20000 };
         await page.goto(url, gotoconf);
         const buffer = await page.screenshot({ path: w800 });
         await sharp(w800)

@@ -10,10 +10,9 @@
       </datalist>
     </div>
     <div class="select">
-      <select>
-        <option>Everything</option>
-        <option disabled>Infrastructure</option>
-        <option disabled>HTLT TV</option>
+      <select v-model="project">
+        <option :value="null">Everything</option>
+        <option v-for="{id} in projects" :key="id">{{ id }}</option>
       </select>
       <input type="range" v-model="mode" min="0" :max="modes" step=".1" list="t" />
       <select multiple v-model="selected">
@@ -57,6 +56,8 @@ export default {
     const resources = computed(() => parent.$page.resources.edges.map(node));
     const categories = computed(() => parent.$page.categories.edges.map(node));
     const tags = computed(() => parent.$page.tags.edges.map(node));
+    const projects = computed(() => parent.$page.projects.edges.map(node));
+    const project = ref(null);
     const active = ref(0);
     const selected = ref([null]);
     const activename = computed(
@@ -75,17 +76,26 @@ export default {
             ? resource.main.some(tag => selected.value.includes(tag))
             : true
         )
+        .filter(resource =>
+          project.value
+            ? (project.value === "undefined" &&
+                resource.project.length === 0) ||
+              resource.project === project.value
+            : true
+        )
     );
     return {
       resources,
       categories,
       selected,
       tags,
+      projects,
+      project,
       active,
       activename,
       filtered,
       modes: 4,
-      mode: ref(4),
+      mode: ref(3),
       digest
     };
   }
@@ -243,6 +253,7 @@ query {
   resources: allResources {
     edges {
       node {
+        project
         title
         description
         url
@@ -255,6 +266,15 @@ query {
     }
   }
   categories: allCategories {
+    edges {
+      node {
+        id
+        count
+      }
+    }
+  }
+
+  projects: allProjects {
     edges {
       node {
         id
