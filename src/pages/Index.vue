@@ -32,6 +32,9 @@
         <p v-else>{{ digest(description, 100) }}</p>
       </div>
     </div>
+    <nav>
+      <a href="https://generativeart.netlify.com/"></a>
+    </nav>
   </div>
 </template>
 
@@ -105,6 +108,26 @@ export default {
 <style scoped>
 .resources {
   font-family: system-ui;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  mix-blend-mode: hard-light;
+}
+
+nav a {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 5rem;
+  margin: 2rem;
+  background: hsl(100, 180%, 31%);
 }
 
 .main {
