@@ -76,7 +76,7 @@ export default {
         )
         .filter(resource =>
           selected.value[0]
-            ? resource.main.some(tag => selected.value.includes(tag))
+            ? resource.tags.some(tag => selected.value.includes(tag))
             : true
         )
         .filter(resource =>
